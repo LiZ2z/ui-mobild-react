@@ -12,7 +12,6 @@ import Icon from './icon'
  *
  *
  */
-let id = 0
 
 class Checkbox extends Component {
   constructor(props) {
@@ -20,7 +19,6 @@ class Checkbox extends Component {
     this.state = {
       checked: false
     }
-    this.id = 'u-checkbox-' + (id++)
     this.hasChecked = props.hasOwnProperty('checked')
     this.normalizeValue()
     this.resetState(props, true)
@@ -90,25 +88,20 @@ class Checkbox extends Component {
     const {label, className, children} = this.props
     const {checked} = this.state
     return (
-      <React.Fragment>
-        <label
-          className={'checkbox needsclick ' + (className || '') + (checked ? ' _checked' : '')}
-          htmlFor={this.id}
-        >
-          {children ? children : (
-            <React.Fragment>
-              <Icon/>
-              <span className='checkbox-label'>{label}</span>
-            </React.Fragment>
-          )}
-        </label>
+      <label className={'checkbox needsclick ' + (className || '') + (checked ? ' _checked' : '')}>
+        {children ? children : (
+          <React.Fragment>
+            <Icon/>
+            <span className='checkbox-label'>{label}</span>
+          </React.Fragment>
+        )}
         <input type='checkbox'
                className='checkbox__exact'
                onChange={this.toggleCheck}
                checked={checked}
-               id={this.id}
+               onClick={e => e.stopPropagation()}
         />
-      </React.Fragment>
+      </label>
     )
   }
 }

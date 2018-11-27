@@ -1,0 +1,83 @@
+@import '../../styles/theme.scss';
+$padding: 12px;
+$base-height: 32px;
+$total-height: 54px;
+$font-size: 16px;
+$height: 18px;
+.u-input{
+  // padding: ($total-height - $base-height - 1px)/2 0;
+  position: relative;
+  height:$total-height;
+  display: flex;
+  align-items: center;
+  &+.u-input{
+    @include border(top)
+  }
+  .iconfont{
+    position: absolute;
+    right: 8px;
+    top: 14px;
+    height: 21px;
+    color:  #D8D8D8;
+    font-size: 14px;
+    vertical-align: middle;
+    line-height: 21px;
+    
+  }
+  input + .iconfont{
+    top:50%;
+    transform: translate(0, -50%);
+  }
+  &.f-autosize-textarea {
+    height: auto;
+    align-items: flex-start;
+    padding: 18px 0;
+    .iconfont{
+      height: 21px;
+      line-height: 21px;
+    }
+  }
+}
+.u-input__label,
+.u-input__exact{
+  font-size: 16px;
+}
+
+.u-input__label {
+  display: block;
+  white-space: nowrap;
+  color: #4A4A4A;
+  width: 90px;
+  flex: none;
+  min-height: $height;
+  line-height: $height;
+}
+
+.u-input__exact{
+  flex: 1;
+  position: relative;
+  border: none;
+  width: 100%;
+  line-height: $height;
+  outline: none;
+  color: #323232;
+  display: block;
+  resize: none;
+  width: 100%;
+  outline: 0;
+  padding:0;
+  min-height: $height;
+  &:focus{
+    padding-right: 24px;
+    overflow: hidden;
+  }
+  
+}
+input:focus{
+  padding-right: 24px;
+  overflow: hidden;
+}
+input::placeholder{
+  min-height: $height;
+  line-height: $height;
+}

@@ -11,7 +11,7 @@
 $back-c: rgba(3, 3, 3, 0.84);
 
 .u-toast-container {
-  position: fixed;
+  position: absolute;
   z-index: 9999;
   line-height: 1;
   padding: 10px 12px;
@@ -39,6 +39,12 @@ $back-c: rgba(3, 3, 3, 0.84);
       height: 74px;
       min-width: 0;
     }
+  }
+  .u-toast-text{
+    font-size: 14px;
+    max-width: 240px;
+    padding: 2px 8px;
+    line-height: 16px;
   }
 }
 

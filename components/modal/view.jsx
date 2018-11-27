@@ -27,18 +27,18 @@ class Modal extends React.PureComponent {
     this.onOk = this.onOk.bind(this)
     this.onCancel = this.onCancel.bind(this)
   }
-  onCancel() {
+  onCancel(e) {
     if(!this.props.hasOwnProperty('visible')) {
       this.setState({ isVisible: false})
     }
 
     const fn = this.props.onCancel
-    fn && fn()
+    fn && fn(e)
   }
-  onOk() {
+  onOk(e) {
     const props = this.props
     const fn = props.onOk
-    fn && fn()
+    fn && fn(e)
 
     if(!props._isFunction) return
 

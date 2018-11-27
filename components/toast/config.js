@@ -1,5 +1,5 @@
 export default  {
-  duration: 3000,
+  duration: 2500,
   position: 'center', // bottom | center
   style: '',
   needMask: true,
