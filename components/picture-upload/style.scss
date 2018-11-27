@@ -1,0 +1,39 @@
+.u-upload__container{
+  padding:12px;
+  background: #fff;
+  font-size:0;
+  line-height: 0;
+}
+.u-file-input{
+  display: block;
+  width: 100px;
+  height:100px;
+  background: #F7F7F7;
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  &:active{
+    background: darken(#F7F7F7, 10%);
+  }
+  &:after,
+  &:before{
+    display: block;
+    content: '\0022';
+    height: 4px;
+    width: 24px;
+    border-radius: 4px;
+    background:#969696;
+    transform: translate(-50%, -50%);
+    position: absolute;
+    left: 50%;
+    top: 50%;
+  }
+  &:before{
+    transform: translate(-50%, -50%) rotateZ(90deg);
+  }
+}
+.u-file-input__exact{
+  appearance: none;
+  height: 0; width: 0;
+  overflow: hidden;
+}

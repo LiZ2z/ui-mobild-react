@@ -1,0 +1,40 @@
+.u-slide-container,
+.u-slide-track{
+  position: relative;
+}
+
+.u-slide-btns-wrap__right,
+.u-slide-track{
+  &.animation{
+    transition: all ease .3s;
+  }
+}
+
+%position {
+  position: absolute;
+  top: 0;
+  bottom:0;
+  right:0;
+}
+
+
+.u-slide-btns-wrap__right{
+  @extend %position;
+  overflow: hidden;
+  color: #fff;
+  text-align: center;
+  white-space: nowrap;
+  font-size: 14px;
+  display: flex;
+}
+
+.u-slide-btn{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: auto;
+  overflow: hidden;
+
+}
+
+// .cell{background:#ccc;}

@@ -1,0 +1,40 @@
+.u-tab__container{
+  background: #fff;
+  font-size: 16px;
+  text-align: center;
+  line-height:1;
+}
+
+
+.u-tab__container.__default {
+  .u-tab__track{
+    display: flex;
+  }
+  .u-tab__panel{
+    min-width: 75px;
+    flex:auto;
+    padding: 14px 0;
+    text-align: center;
+    position: relative;
+    color: #646464;
+    &:active{
+      background: #f7f7f7;
+    }
+    &:not(._active) {
+      &:after{
+        background: transparent;
+      }
+    }
+    &:after{
+      display: block;
+      content:"\0020";
+      position: absolute;
+      bottom: 0;
+      left:6px;right:6px;
+      height:2px;
+      transition: all ease .3s;
+    }
+
+  }
+
+}

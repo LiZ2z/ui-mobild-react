@@ -1,0 +1,61 @@
+@import '../../styles/extend';
+@import '../../styles/animation';
+
+.u-toast-mask {
+  @extend %mask;
+  &.hidden{
+    display: none
+  }
+}
+
+$back-c: rgba(3, 3, 3, 0.84);
+
+.u-toast-container {
+  position: fixed;
+  z-index: 9999;
+  line-height: 1;
+  padding: 10px 12px;
+  background: $back-c;
+  border-radius: 8px; /*no*/
+  color: #fff;
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5); /*no*/
+  text-align: center;
+  &.center {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%)
+  }
+  &.bottom {
+    left: 50%;
+    bottom: 5%;
+    transform: translateX(-50%)
+  }
+  &._loading{
+    min-width: 124px;
+    padding: 16px 27px;
+    &._no-text{
+      padding:20px 0 0 ;
+      width:74px;
+      height: 74px;
+      min-width: 0;
+    }
+  }
+}
+
+.u-toast-loading{
+  margin: 0 auto;
+  padding-bottom: 10px;
+  text-align: center;
+}
+
+.u-toast-loading-icon{
+  width: 34px;
+  height: 34px;
+  animation: u_spin linear 1s infinite;
+  border-radius:50%;
+  border: 2px solid #fff;
+  display: inline-block;
+  position: relative;
+  border-left-color: transparent;
+}
+

@@ -1,0 +1,130 @@
+@keyframes u_fadeIn {
+  from { opacity: 0;}
+  to { opacity: 1;}
+}
+
+.u-search__container{
+  display:flex;
+  padding: 12px;
+  background: #F7F7F7;
+}
+
+.u-search__placeholder{
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%,-50%);
+  color: #ccc;
+  font-size: 14px;
+  ._text{
+    margin-left:4px;
+  }
+}
+
+.u-search-mask{
+  position: fixed;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  z-index: 3333;
+  background: #fff;
+}
+.u-search__container._active{
+  .u-search__input{
+    opacity: 1;
+  }
+  .u-search__placeholder{
+    transition: left ease .6s;
+    transform: translate(0,-50%);
+    left: 4px;
+  }
+}
+
+.u-search__input-wrap{
+  position: relative;
+  z-index: 11;
+  background: #fff;
+  overflow: hidden;
+  flex:auto;
+  border-radius: 4px;
+  //transition:width ease .3s;
+}
+.u-search__input-clear{
+  // background:#ccc;
+  position: absolute;
+  right:  8px;
+  top:9px;
+  font-size:14px;
+  color: #D8D8D8;
+  &:after,
+  &:before{
+    background:#fff;
+    height:11px;
+  }
+}
+.u-search__cancel-btn{
+  flex:none;
+  font-size: 16px;
+  line-height:1;
+  color: #323232;
+  height:32px;
+  padding: 8px 0 8px 12px;
+  box-sizing: border-box;
+}
+.u-search__input{
+  width:100%;
+  height:32px;
+  border:none;
+  font-size: 14px;
+  line-height:1;
+  padding:9px;
+  padding-left: 24px;
+  box-sizing: border-box;
+  outline: none;
+  background:transparent;
+  opacity: 0;
+  transition: opacity ease .6s;
+}
+
+
+
+
+.u-search__fetch-tip{
+  text-align: center;
+  padding-top:14px;
+  color:#969696;
+  font-size: 14px;
+}
+
+.u-search-result{
+  position: absolute;
+  top: 56px;
+  left:0;
+  right:0;
+  bottom:0;
+  //background:#fff;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overflow-scrolling: touch;
+  animation: u_fadeIn ease .3s;
+  &:before{
+    position: absolute;
+    top:-1px;left:0;right:0;
+    z-index: 22;
+    height:1px;
+    display: block;
+    content:'\0020';
+    transition: box-shadow ease .3s;
+  }
+
+  &._shadow:before{
+    box-shadow: 0 0 10px 0px rgba(0,0,0,0.3); /*no*/
+  }
+}
+
+.u-search-loading-icon{
+  margin-left: 6px;
+}

@@ -1,0 +1,22 @@
+
+
+.u-zoom{
+  width:100%;
+  height: 100%;
+  position: relative;
+}
+
+
+.u-zoom__track{
+  width:100%;
+  height: 100%;
+  transition: all ease-in-out ;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  transform-origin: left top;
+  font-size:0;
+  line-height:0;
+}
+

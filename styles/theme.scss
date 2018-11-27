@@ -1,0 +1,87 @@
+input::-webkit-input-placeholder{
+  color:#ccc;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
+  line-height: 1;
+}
+textarea::-webkit-input-placeholder{
+  color: #CCCCCC;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+  sans-serif;
+}
+
+
+%weilei {
+  display:block;
+  content: '\0020';
+  width:100%;
+  height: 1px; /*no*/
+  position: absolute;
+  background: #f0f0f0;
+  transform: scaleY(0.5);
+}
+%weilei2 {
+  display:block;
+  content: '\0020';
+  height:100%;
+  width: 1px; /*no*/
+  top: 0;
+  position: absolute;
+  background: #f0f0f0;
+  transform: scaleX(0.5);
+}
+/*
+*上下边框处理
+*/
+@mixin border($origin: top, $borderColor: #F0F0F0){ 
+  position:relative;
+  &:after{ 
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      transform-origin: 0;
+      height: 1px;/*no*/
+      transform: scaleY(.5);
+      @if ($origin == top ) {
+          top: 0;
+          border-top: 1px solid $borderColor;
+      }
+      @if ($origin == bottom){ 
+          bottom: 0;
+          border-bottom: 1px solid $borderColor;
+      }
+  }
+      
+}
+.u-border-top,
+.border-top{
+  position: relative;
+  border-top: 1px solid transparent; /*no*/
+  &:before{
+    @extend %weilei;
+    top: 0;
+  }
+}
+.u-border-bottom,
+.border-bottom{
+  position: relative;
+  border-bottom: 1px solid transparent; /*no*/
+  &:after{
+    @extend %weilei;
+    bottom: 0;
+  }
+}
+.u-border-right,
+.border-right{
+  position: relative;
+  border-right: 1px solid transparent; /*no*/
+  &:after{
+    @extend %weilei2;
+    right: 0;
+  }
+
+}
+

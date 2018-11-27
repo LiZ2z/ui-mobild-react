@@ -1,0 +1,101 @@
+@import '../../styles/extend';
+@import '../../styles/public';
+@import '../../styles/animation';
+
+.u-modal-mask{
+  @extend %mask;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: u_fadeIn linear .3s;
+  &._hidden{
+    display: none;
+  }
+}
+
+.u-modal-container {
+  position: relative;
+  background: #FFF;
+  border-radius: 8px; /*no*/
+  overflow: hidden;
+   width: 295px;
+  font-size: 16px;
+  transform-origin: center center;
+  animation: u_scaleIn ease-in-out .3s;
+}
+.u-modal-close-btn.u-icon{
+  color: #DCE0E5;
+  font-size: 14px;
+  width: 14px;
+  position: absolute !important;
+  right: 12px;
+  top: 12px;
+  line-height: 1;
+}
+.u-modal-header{
+   padding: 24px 0 0;
+  font-weight: 600;
+  text-align:center;
+}
+.u-modal-body{
+  min-height: 54px; // 94px;
+   padding: 22px 17px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #323232;
+}
+
+.u-modal-footer{
+  display: flex;
+}
+
+.u-modal-btn{
+  width: 50%;
+  height: 48px;
+  flex: none;
+  line-height: 48px;
+  text-align: center;
+  user-select: none;
+  color: $base-c;
+
+  &:active{
+    background: #eee;
+  }
+
+}
+/*-----------------*/
+/*-----个性定制-----*/
+/*-----------------*/
+.u-modal-container {
+
+  &._no-title{
+    .u-modal-body{
+      min-height: 94px;
+    }
+  }
+  &._alert{
+    .u-modal-body{
+      text-align: center;
+    }
+    .u-modal-btn {
+      width: 100%;
+    }
+  }
+
+  &._not-fn{
+    width: auto;
+    margin: 0 auto;
+    .u-modal-body{
+      min-width: 160px;
+      padding: 0;
+      //min-height: 0;
+    }
+  }
+}
+
+
+
+

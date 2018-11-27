@@ -1,0 +1,52 @@
+
+.u-fetch-container{
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  &:after{
+    display: block;
+    content: '\0020';
+    position: absolute;
+    top:-1px;/*no*/
+    left:0;right:0; /*no*/
+    z-index: 11111;
+    height:1px;/*no*/
+    box-shadow: 0 -1px 10px rgba(0,0,0,0.2);/*no*/
+  }
+
+}
+
+.u-fetch-container__sub{
+
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+
+.__loading.animation,
+.u-fetch-track.animation,
+.__loading__wrap.animation{
+  transition: all ease .3s;
+}
+
+.__loading__wrap._top{
+  position: absolute;
+  left:0;right:0;
+  bottom: 100%;
+  overflow: hidden;
+}
+.__loading-text{
+  text-align:center;
+  color:#aaa;
+  line-height:25px;
+  font-size: 13px;
+}
+
+.u-fetch-loading-icon{
+  margin-left: 6px;
+}
+
+.__loading-text._bottom{
+  padding: 8px 0 16px;
+}

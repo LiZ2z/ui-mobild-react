@@ -1,0 +1,73 @@
+@import '../../styles/animation';
+
+.u-preview-item {
+  display: inline-block;
+}
+
+.u-preview__container {
+  z-index: 4444;
+  background: #000;
+  animation: u_fadeIn ease .3s;
+}
+
+/*================*/
+.u-preview__container,
+.u-preview__zoom {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.u-preview__zoom,
+.u-preview__swipe-item {
+  width: 100%;
+  height: 100%;
+}
+
+// 放大 缩小部分
+.u-preview__zoom {
+  transition: all ease;
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+.u-preview__modal-img,
+.u-preview__zoom-img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+}
+
+// 右上角关闭按钮
+.u-preview__close-btn {
+  position: absolute !important;
+  z-index: 33;
+  right: 12px;
+  top: 12px;
+  transform: scale(1.2);
+  &:after,
+  &:before {
+    background: #fff !important;
+  }
+}
+
+.u-preview-swipe-tip-bar {
+  background: rgba(0, 0, 0, 0.5);
+  color: #fff;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 45px;
+  line-height: 45px;
+  padding: 0 10px;
+}
+
+// 右下角指示器
+.u-preview-swipe-indicator {
+  color: #fff;
+  font-size: 14px;
+}

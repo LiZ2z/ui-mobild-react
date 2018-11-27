@@ -1,0 +1,55 @@
+@import '../../styles/animation.scss';
+
+.u-popup__mask{
+  position: fixed;
+  top:0;left:0;
+  right:0;bottom:0;
+  background-color: rgba(0,0,0,0.5);
+  z-index: 5555;
+  &._hidden{
+    //display: none;
+    top:auto;
+    .u-popup__container{
+      box-shadow: 0 0 10px 0 #ccc;
+    }
+  }
+}
+
+.u-popup__container{
+  overflow-y:auto;
+  overflow-x: hidden;
+  min-height:30px;
+  height: auto;
+  background-color: #fff;
+  position: absolute;
+  bottom: 0;
+  left:0;right:0;
+  font-size: 16px;
+  line-height: 1;
+  animation: u_slideUp linear .3s;
+  //box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.3);
+}
+$title-pad: 15px;
+.u-popup__close-btn.u-icon{
+  position: absolute;
+  top:$title-pad;right:12px;
+  z-index: 1111;
+  color:#ccc;
+
+}
+
+%title-footer{
+  color: #4A4A4A;
+  text-align: center;
+  padding: $title-pad 0;
+}
+
+.u-popup__title{
+  @extend %title-footer;
+}
+
+.u-popup__footer{
+  //border-top: 10px solid #f7f7f7;
+  @extend %title-footer;
+  color: #323232;
+}

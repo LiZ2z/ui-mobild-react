@@ -1,0 +1,73 @@
+.u-swipe__container{
+  position: relative;
+  height:100%;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  //&._moving:after{
+  //  display: block;
+  //  content: '\0020';
+  //  position: absolute;
+  //  top:0;left:0;bottom:0;right:0;
+  //  z-index: 1111;
+  //  background: rgba(0,0,0,0.5);
+  //}
+  &._horizontal {
+    overflow-x: hidden;
+    overflow-y: scroll;
+    .u-swipe__track{
+      font-size:0 !important;
+      white-space: nowrap;
+    }
+    .u-swipe__item{
+      display: inline-block;
+      font-size:16px;
+      overflow-x: hidden;
+      overflow-y: scroll;
+    }
+
+    .indicator-area{
+      left:10px; right:10px;top: auto;
+      text-align: center;
+    }
+    .indicator-wrap{
+      top:auto;
+    }
+    .indicator{
+      display: inline-block;
+    }
+  }
+}
+.u-swipe__track{
+  height:100%;
+  transition: transform cubic-bezier(0.3333, 0.66666,0.66666,1) .3s;
+}
+.u-swipe__item{
+  height:100%;
+  width:100%;
+  -webkit-overflow-scrolling: touch;
+  overflow-x: scroll;
+  overflow-y: hidden;
+}
+
+.indicator-area{
+  position: absolute;
+  padding:3px 2px;
+  right:0;
+  top:0;bottom:0;
+  font-size:0;
+}
+.indicator-wrap{
+  position: relative;
+  top:50%;
+}
+.indicator{
+  width:8px;
+  height:8px;
+  border-radius:50%;
+  background:#fff;
+  margin:4px;
+
+  &.active{
+    background: rgba(0, 0, 0, 0.65);
+  }
+}
