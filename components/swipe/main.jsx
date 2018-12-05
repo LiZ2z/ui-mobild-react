@@ -66,35 +66,26 @@ class Swipe extends React.PureComponent {
   UNSAFE_componentWillReceiveProps(nextP){
     const state = this.state
     const nC = nextP.current
-    if((this.props.current !== nC && nC !== state.current) || state.distance !== 0) {
-      this.isPropsChange = true
+
+    if((this.props.current !== nC && nC !== state.current)) {
+      const duration = nextP.transitionWhenPropsChange ? nextP.duration : 0
+    
       this.setState({
         distance: 0,
         current: nC,
-        duration: nextP.transitionWhenPropsChange ? nextP.duration : 0
+        duration: duration
+      }, ()=> {
+        this.changeEnd(duration)
       })
     }
   }
-  /**
-   * 切换完成后， 如果用户监听了changeEnd事件， 触发onChangeEnd
-   * */
-  componentDidUpdate(prevP, prevS) {
-    clearTimeout( this.timer )
-    if(!this.props.onChangeEnd) return
-    const props = this.props
-    const current = this.state.current
-    // 判断swipe是否发生了滑动
-    if(prevS.current !== current) {
-      // 判断是自身发生的滑动， 还是接收到的来自父组件的props.current而产生的滑动
-      // 据此，判断duration时间
-      const duration = (props.current !== prevP.current )
-        ? (props.transitionWhenPropsChange ? props.duration : 0)
-        : props.duration
 
-      this.timer = setTimeout(()=> {
-        this.props.onChangeEnd(current)
-      },duration)
-    }
+  changeEnd(duration) {
+    if(!this.props.onChangeEnd) return
+    clearTimeout( this.timer )
+    this.timer = setTimeout(()=> {
+        this.props.onChangeEnd(this.state.current)
+     },duration)
   }
 
   /**
@@ -162,20 +153,20 @@ class Swipe extends React.PureComponent {
       current += dist*dirct > 0 ? -1 : 1
     }
 
-    // if(!this.isPropsChange) {
-    //
-    // }
     props.onChange(current)
 
     // shouldDisableSelfUpdate
-    if(props.hasOwnProperty('current')) return
+    if(props.hasOwnProperty('current') && this.state.distance===0) return
 
     this.setState({
       current: current,
       distance: 0,
       duration: props.duration,
+    }, ()=> {
+      this.changeEnd(props.duration)
     })
   }
+  
 
 
   /**

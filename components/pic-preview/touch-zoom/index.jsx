@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, { Component } from 'react'
 import createSlide from '../../slide'
 import './style.scss'
 
@@ -6,7 +6,7 @@ const zoomQueue = []
 
 // const div = document.body.appendChild(document.createElement('div'))
 // div.setAttribute('style', 'position:fixed;top:0;left:0;z-index: 99999;background:#ccc;color:#000;')
-//
+
 // const div2 = document.body.appendChild(document.createElement('div'))
 // div2.setAttribute('style', 'position:fixed;bottom:0;left:0;z-index: 99999;background:#ccc;color:#000;')
 
@@ -22,17 +22,17 @@ class Zoom extends Component {
       transX: 0,  // translate 左右偏移
       transY: 0,   // translate 上下偏移
     }
-    this.state = Object.assign({duration: 0}, obj)
+    this.state = Object.assign({ duration: 0 }, obj)
 
     this.cache = obj          // 记录元素上次的transform信息
 
     this.rect = {}                // 记录内部元素rect信息
-    this.target = {current: null} // 获取内部元素，以获取信息
+    this.target = { current: null } // 获取内部元素，以获取信息
 
-    this.wrap = {current: null}   // 获取外部元素，以添加事件
+    this.wrap = { current: null }   // 获取外部元素，以添加事件
 
 
-    if(props.id || props.id === 0) {
+    if (props.id || props.id === 0) {
       zoomQueue.push({
         id: props.id,
         reset: this.reset.bind(this)
@@ -48,7 +48,7 @@ class Zoom extends Component {
     }
     this.cache = obj
     this.status = NONE
-    this.setState(Object.assign({duration: 0}, obj))
+    this.setState(Object.assign({ duration: 0 }, obj))
   }
   addEvent() {
     this.detachEvent = createSlide({
@@ -57,28 +57,21 @@ class Zoom extends Component {
       onEnd: this.handleEnd.bind(this),
     })
   }
-  /**
-   * 获取元素宽高、添加事件
-   */
-  componentDidMount() {
-    setTimeout(() => {
-      this.rect = this.target.current.getBoundingClientRect()
-    }, 34)
-    // 因为此元素宽高靠内部图片支撑,如果直接使用网络图片,
-    // 图片加载较慢会导致获取不到正确的宽高
-    if(!this.props.disabled) this.addEvent()
 
-  }
   /**
    * @function - 随着props启动Zoom
    * @param {*} nextP
    */
   UNSAFE_componentWillReceiveProps(nextP) {
+    if(nextP.initialized !== this.props.initialized && nextP.initialized){
+      this.rect = this.target.current.getBoundingClientRect()
+      if (!this.props.disabled) this.addEvent()
+    } 
 
-    if(nextP.disabled !== this.props.disabled) {
-      if(nextP.disabled) {
+    if (nextP.disabled !== this.props.disabled) {
+      if (nextP.disabled) {
         this.detachEvent && this.detachEvent()
-        this.reset()
+        // this.reset()
       } else {
         this.addEvent()
       }
@@ -91,9 +84,9 @@ class Zoom extends Component {
   componentWillUnmount() {
     this.slideObj && this.slideObj.detachEvent()
 
-    if(this.props.id) {
-      for(let i=0, len = zoomQueue.length; i < len; i++) {
-        if(zoomQueue[i].id === this.props.id) {
+    if (this.props.id) {
+      for (let i = 0, len = zoomQueue.length; i < len; i++) {
+        if (zoomQueue[i].id === this.props.id) {
           zoomQueue.splice(i, 1)
           return
         }
@@ -110,10 +103,10 @@ class Zoom extends Component {
       // 单指滑动，
       //如果 滑动的图片的边缘就阻止滑动，启动外层的轮播组件
       //否则，滑动图片
-      if(
+      if (
         touch.axis === 'X' && (
           this.cache.scale === 1
-          ||(this.leftToTheEnd && touch.direction > 0)
+          || (this.leftToTheEnd && touch.direction > 0)
           || (this.rightToTheEnd && touch.direction < 0)
         )
       ) {
@@ -125,7 +118,7 @@ class Zoom extends Component {
         this.rightToTheEnd = false
       }
 
-      if(this.cache.scale === 1) return
+      if (this.cache.scale === 1) return
       this.status = MOVING
       e.stopPropagation()
       this.movePicture(touch, e)
@@ -139,7 +132,8 @@ class Zoom extends Component {
   }
 
 
-  handleEnd(obj,e) {
+  handleEnd(obj, e) {
+    this.shouldClose(obj)
     // 单指移动
     if (obj.numberOfTouches + obj.numberOfChanged <= 1) {
       if (this.status === MOVING) {
@@ -151,19 +145,21 @@ class Zoom extends Component {
 
     this.zoomPictureEnd(obj)
   }
-
-
+  shouldClose(obj) {
+    const touch = obj.prevTouches[0]
+    const startTimestamp= touch.startTimestamp
+    const endTimestamp = obj.endTimestamp
+    const touchesLen = obj.touches.length+obj.prevTouches.length
+    if(touchesLen === 1 && (endTimestamp-startTimestamp<150) && (!touch.diff ||touch.diff<10)) {
+      this.props.onClose()
+    }
+  }
   /**
    * @function - 移动
    * */
   movePicture(obj) {
     const cache = this.cache
-    // div.innerHTML = (
-    //   `
-    //   <p style='width:100%;word-break:break-all;'>缓存：${JSON.stringify(cache)}</p>
-    //   <p style='width:100%;word-break:break-all;'>移动obj：${JSON.stringify(obj)}</p>
-    //   `
-    // )
+   
 
     this.setState({
       transX: ((obj.diffX * obj.directionX) - cache.transX) / cache.scale,
@@ -226,8 +222,8 @@ class Zoom extends Component {
     // 180 常量，
     let scale = (multiple.diffSpaceBetween / 180) + this.cache.scale
 
-    if(scale < 1) {
-      scale = (multiple.diffSpaceBetween / (180 + (1-scale) * 200)) + this.cache.scale
+    if (scale < 1) {
+      scale = (multiple.diffSpaceBetween / (180 + (1 - scale) * 200)) + this.cache.scale
     }
 
     this.computeZoomStyle(scale, [multiple.startX, multiple.startY])
@@ -241,7 +237,7 @@ class Zoom extends Component {
     currentScale = currentScale > 3 ? 3 : currentScale
 
 
-    if(currentScale < 1) {
+    if (currentScale < 1) {
       this.props.onChange(Object.assign({}, this.state))
       this.props.onClose()
       return
@@ -272,7 +268,7 @@ class Zoom extends Component {
       const rect = this.rect
       const x = arr[0] - rect.left + rect.width * this.props.index
       const y = arr[1] - rect.top
-      const [w,h] = this.computeZoomTranslate(scale, x, y)
+      const [w, h] = this.computeZoomTranslate(scale, x, y)
 
       this.setState({
         scale: scale,
@@ -291,7 +287,7 @@ class Zoom extends Component {
    * @param {number} y
    */
   computeZoomTranslate(currentScale, x, y) {
-    const {scale: lastScale, transX, transY} = this.cache
+    const { scale: lastScale, transX, transY } = this.cache
 
     return [
       (currentScale / lastScale - 1) * (transX + x) + transX,
@@ -314,15 +310,17 @@ class Zoom extends Component {
       <div
         className={'u-zoom'}
         ref={this.wrap}
+        // onClick={this.props.onClose}
+
       >
         <div className="u-zoom__track"
-             ref={this.target}
-             style={{
-               transform: `scale(${state.scale}, ${state.scale}) translate3d(${state.transX}px, ${state.transY}px, 0)`,
-               transitionDuration: state.duration + 'ms',
-             }}
+          ref={this.target}
+          style={{
+            transform: `scale(${state.scale}, ${state.scale}) translate3d(${state.transX}px, ${state.transY}px, 0)`,
+            transitionDuration: state.duration + 'ms',
+          }}
         >
-            {this.props.children}
+          {this.props.children}
         </div>
       </div>
     )
@@ -330,16 +328,16 @@ class Zoom extends Component {
 }
 
 Zoom.defaultProps = {
-  onChange: () => {},
-  onClose: ()=> {},
+  onChange: () => { },
+  onClose: () => { },
   index: 0,
   disabled: false,
 }
 
 
 Zoom.clearState = function (id) {
-  if(id || id === 0) {
-    zoomQueue.filter(item=> item.id === id)[0].reset()
+  if (id || id === 0) {
+    zoomQueue.filter(item => item.id === id)[0].reset()
     return
   }
   zoomQueue.forEach(item => item.reset())
