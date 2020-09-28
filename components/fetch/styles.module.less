@@ -1,0 +1,46 @@
+.fetch {
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+  &:after {
+    display: block;
+    content: "\0020";
+    position: absolute;
+    top: -1px; /*no*/
+    left: 0;
+    right: 0; /*no*/
+    z-index: 11111;
+    height: 1px; /*no*/
+    box-shadow: 0 -1px 10px rgba(0, 0, 0, 0.2); /*no*/
+  }
+}
+
+.fetchContainer {
+  height: 100%;
+  overflow: auto;
+  position: relative;
+  -webkit-overflow-scrolling: touch;
+}
+
+.animation {
+  transition: all ease 0.3s;
+}
+
+.tipWrap {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 100%;
+  overflow: hidden;
+}
+
+.tip {
+  text-align: center;
+  color: #aaa;
+  line-height: 25px;
+  font-size: 13px;
+}
+
+.bottomTip {
+  padding: 8px 0 16px;
+}
