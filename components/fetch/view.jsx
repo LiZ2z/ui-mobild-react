@@ -1,14 +1,14 @@
-import React, { useRef, useState } from "react";
+import React, { useImperativeHandle, useRef, useState } from "react";
 import propTypes from "prop-types";
 import cn from "classnames";
-import { Axis } from "../slide";
-import useDidUpdate from "./useDidUpdate";
+import { Axis } from "./slide";
+import useDidUpdate from "../../hooks/useDidUpdate";
 import useGlobalHandlerAttach from "./useGlobalHandlerAttach";
 import styles from "./styles.module.less";
 
 const Duration = 300;
 const MaxDistance = 35;
-const ScrollMinDistance = 45; // 滚动加载 距离底部  触发距离
+const ScrollMinDistance = 100; // 滚动加载 距离底部  触发距离
 
 /* 手指触摸的状态 */
 const TouchStatus = {
@@ -49,7 +49,7 @@ const ScrollStatus = {
  *
  * */
 
-const Fetch = (props) => {
+const Fetch = (props, ref) => {
   const {
     children,
     style,
@@ -58,6 +58,7 @@ const Fetch = (props) => {
     disableScroll,
     stopScrollPropagation,
     onFetch,
+    allLoadedTip,
   } = props;
   const wrapElRef = useRef(null);
   // track 元素滑动距离
@@ -78,7 +79,8 @@ const Fetch = (props) => {
   // 加载状态 ?  下拉刷新 | 无限滚动
   const fetchTypeRef = useRef(null);
   const isFetchingRef = useRef(false);
-  const promiseRejectRef = useRef(null);
+  const resolveRef = useRef();
+
   const fetch = (fetchType) => {
     // 如果正在请求, 之后的触发都无效, 直到请求完成
     // 但如果两次的请求类型不同, 则继续
@@ -88,30 +90,18 @@ const Fetch = (props) => {
     fetchTypeRef.current = fetchType;
     isFetchingRef.current = true;
 
-    // reject上次的Promise
-    if (promiseRejectRef.current) {
-      promiseRejectRef.current();
-      promiseRejectRef.current = null;
-    }
+    // 重置状态
+    resolveRef.current = (allLoaded) => {
+      isFetchingRef.current = false;
+      setDistance(0);
+      setPullRefreshStatus(RefreshStatus.Done);
+      setNeedTransition(true);
+      setScrollFetchStatus(
+        allLoaded ? ScrollStatus.AllLoaded : ScrollStatus.Done
+      );
+    };
 
-    new Promise((resolve, reject) => {
-      promiseRejectRef.current = reject;
-      onFetch(resolve, fetchType);
-    }).then((hasAllLoaded) => {
-      try {
-        // 重置状态
-        isFetchingRef.current = false;
-        setDistance(0);
-        setPullRefreshStatus(RefreshStatus.Done);
-        setNeedTransition(true);
-        setScrollFetchStatus(
-          hasAllLoaded ? ScrollStatus.AllLoaded : ScrollStatus.Done
-        );
-      } catch (error) {
-        console.log("fetch Error:");
-        console.log(error);
-      }
-    });
+    onFetch(fetchType);
   };
 
   const touchStartHandler = () => {
@@ -247,48 +237,64 @@ const Fetch = (props) => {
     fetch(FetchType.Scroll);
   };
 
+  const refreshTip = () => {
+    if (pullRefreshStatus === RefreshStatus.Fetching) {
+      return <div>正在加载...</div>;
+    }
+    return pullRefreshStatus === RefreshStatus.IsMax ? "松手刷新" : "下拉刷新";
+  };
+
+  const scrollTip = () => {
+    if (scrollFetchStatus === ScrollStatus.Fetching) {
+      return <span>正在加载...</span>;
+    }
+    return scrollFetchStatus === ScrollStatus.AllLoaded ? allLoadedTip : null;
+  };
+
+  useImperativeHandle(ref, () => ({
+    resolve: (allLoaded) => {
+      if (!resolveRef.current) {
+        return;
+      }
+      resolveRef.current(allLoaded);
+      resolveRef.current = undefined;
+    },
+    scrollTo: (scrollTop) => {
+      if (!wrapElRef.current) {
+        return;
+      }
+      wrapElRef.current.scrollTop = scrollTop;
+    },
+  }));
+
   return (
     <div className={cn(styles.fetch, className)}>
       <div
         ref={wrapElRef}
         style={style}
         onScroll={scrollHandler}
-        className={styles.fetchContainer}
+        className={styles.track}
       >
         {/* 下拉加载 */}
-        <div
-          className={cn(styles.tipWrap, needTransition && styles.animation)}
-          style={{ transform: `translate3d(0,${distance}px,0)` }}
-        >
-          <div className={styles.tip}>
-            {(() => {
-              if (pullRefreshStatus === RefreshStatus.Fetching) {
-                return <div>正在加载...</div>;
-              }
-              return pullRefreshStatus === RefreshStatus.IsMax
-                ? "松手刷新"
-                : "下拉刷新";
-            })()}
+        {disableRefresh ? null : (
+          <div
+            className={cn(styles.tipWrap, needTransition && styles.animation)}
+            style={{ transform: `translate3d(0,${distance}px,0)` }}
+          >
+            <div className={styles.tip}>{refreshTip()}</div>
           </div>
-        </div>
+        )}
         {/* 内容 */}
         <div
-          className={cn(needTransition && styles.animation)}
+          className={cn(styles.content, needTransition && styles.animation)}
           style={{ transform: `translate3d(0,${distance}px,0)` }}
         >
           {children}
 
           {/* 上滑无限加载 */}
-          {scrollFetchStatus !== ScrollStatus.Done && (
+          {scrollFetchStatus === ScrollStatus.Done ? null : (
             <div className={cn(styles.tip, styles.bottomTip)}>
-              {(() => {
-                if (scrollFetchStatus === ScrollStatus.Fetching) {
-                  return <span>正在加载...</span>;
-                }
-                return scrollFetchStatus === ScrollStatus.AllLoaded
-                  ? "已经没有了"
-                  : null;
-              })()}
+              {scrollTip()}
             </div>
           )}
         </div>
@@ -305,6 +311,7 @@ Fetch.propTypes = {
   className: propTypes.string,
   style: propTypes.object,
   onFetch: propTypes.func,
+  allLoadedTip: propTypes.string,
 };
 Fetch.defaultProps = {
   disableRefresh: false,
@@ -313,9 +320,12 @@ Fetch.defaultProps = {
   className: undefined,
   style: null,
   onFetch: () => undefined,
+  allLoadedTip: "已经没有了",
 };
 
-Fetch.isScroll = (type) => type === FetchType.Scroll;
-Fetch.isRefresh = (type) => type === FetchType.Refresh;
+const ExportFetch = React.memo(React.forwardRef(Fetch));
 
-export default React.memo(Fetch);
+ExportFetch.isScroll = (type) => type === FetchType.Scroll;
+ExportFetch.isRefresh = (type) => type === FetchType.Refresh;
+
+export default ExportFetch;
